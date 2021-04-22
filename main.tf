@@ -355,4 +355,3 @@ resource "mso_schema_template_deploy" "student-schema-2-deploy-site2" {
   site_id       = data.mso_site.site2.id
   undeploy      = false
 }
-#
