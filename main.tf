@@ -2,12 +2,12 @@
 #  stores state @ terraform cloud
 #
 terraform {
-  backend "remote" {
-    organization = "CX-TTG"
-    workspaces {
-      name = "terraform-mso-examples"
-    }
-  }
+  #  backend "remote" {
+  #    organization = "CX-TTG"
+  #    workspaces {
+  #      name = "terraform-mso-examples"
+  #    }
+  #  }
   required_providers {
     mso = {
       source  = "CiscoDevNet/mso"
@@ -163,6 +163,7 @@ resource "mso_schema_template_bd" "bridge_domain-web" {
   vrf_schema_id          = mso_schema.student-lab3-schema.id
   layer2_unknown_unicast = "proxy"
   intersite_bum_traffic  = "false"
+  layer2_stretch = "true"
 }
 #
 # create subnet
@@ -190,6 +191,7 @@ resource "mso_schema_template_bd" "bridge_domain-app" {
   vrf_schema_id          = mso_schema.student-lab3-schema.id
   layer2_unknown_unicast = "proxy"
   intersite_bum_traffic  = "false"
+  layer2_stretch = "true"
 }
 #
 # create subnet
@@ -217,6 +219,7 @@ resource "mso_schema_template_bd" "bridge_domain-service" {
   vrf_schema_id          = mso_schema.student-lab3-schema.id
   layer2_unknown_unicast = "proxy"
   intersite_bum_traffic  = "false"
+  layer2_stretch = "true"
 }
 #
 # create subnet
@@ -286,32 +289,32 @@ resource "mso_schema_site_anp_epg_domain" "epg_app-domain" {
 # filter
 #
 resource "mso_schema_template_filter_entry" "filter_entry" {
-        schema_id = mso_schema.student-lab3-schema-2.id
-        template_name = "${var.student}-template"
-        name = "Permit-All"
-        display_name="Permit-All"
-        entry_name = "Permit-All"
-        entry_display_name="Permit-All"
-        destination_from="unspecified"
-        destination_to="unspecified"
-        source_from="unspecified"
-        source_to="unspecified"
-        arp_flag="unspecified"
+  schema_id          = mso_schema.student-lab3-schema-2.id
+  template_name      = "${var.student}-template"
+  name               = "Permit-All"
+  display_name       = "Permit-All"
+  entry_name         = "Permit-All"
+  entry_display_name = "Permit-All"
+  destination_from   = "unspecified"
+  destination_to     = "unspecified"
+  source_from        = "unspecified"
+  source_to          = "unspecified"
+  arp_flag           = "unspecified"
 }
 #
 # contract 
 #
 resource "mso_schema_template_contract" "template_contract" {
-  schema_id = mso_schema.student-lab3-schema-2.id
+  schema_id     = mso_schema.student-lab3-schema-2.id
   template_name = "${var.student}-template"
   contract_name = "${var.student}-East-West-cntr"
-  display_name = "${var.student}-East-West-cntr"
-  filter_type = "bothWay"
-  scope = "context"
+  display_name  = "${var.student}-East-West-cntr"
+  filter_type   = "bothWay"
+  scope         = "context"
   filter_relationships = {
-    filter_schema_id = mso_schema_template_filter_entry.filter_entry.id
+    filter_schema_id     = mso_schema_template_filter_entry.filter_entry.id
     filter_template_name = "${var.student}-template"
-    filter_name = "Permit-All"
+    filter_name          = "Permit-All"
   }
   directives = ["none"]
 }
@@ -319,11 +322,11 @@ resource "mso_schema_template_contract" "template_contract" {
 # provider
 #
 resource "mso_schema_template_anp_epg_contract" "contract" {
-  schema_id = mso_schema.student-lab3-schema-2.id
-  template_name = "${var.student}-template"
-  anp_name = "anp"
-  epg_name = "app"
-  contract_name = "Permit-All"
+  schema_id         = mso_schema.student-lab3-schema-2.id
+  template_name     = "${var.student}-template"
+  anp_name          = "anp"
+  epg_name          = "app"
+  contract_name     = "Permit-All"
   relationship_type = "provider"
 
 }
@@ -331,11 +334,11 @@ resource "mso_schema_template_anp_epg_contract" "contract" {
 # consumer
 #
 resource "mso_schema_template_anp_epg_contract" "contract1" {
-  schema_id =  mso_schema.student-lab3-schema-2.id
-  template_name = "${var.student}-template"
-  anp_name = "anp"
-  epg_name = "web"
-  contract_name = "Permit-All"
+  schema_id         = mso_schema.student-lab3-schema-2.id
+  template_name     = "${var.student}-template"
+  anp_name          = "anp"
+  epg_name          = "web"
+  contract_name     = "Permit-All"
   relationship_type = "consumer"
 }
 #
