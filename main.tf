@@ -8,7 +8,6 @@ terraform {
       name = "terraform-mso-examples"
     }
   }
-
   required_providers {
     mso = {
       source  = "CiscoDevNet/mso"
