@@ -312,8 +312,6 @@ resource "mso_schema_template_contract" "template_contract" {
   filter_type   = "bothWay"
   scope         = "context"
   filter_relationships = {
-    filter_schema_id     = mso_schema_template_filter_entry.filter_entry.id
-    filter_template_name = "${var.student}-template"
     filter_name          = "Permit-All"
   }
   directives = ["none"]
@@ -326,7 +324,7 @@ resource "mso_schema_template_anp_epg_contract" "contract" {
   template_name     = "${var.student}-template"
   anp_name          = "anp"
   epg_name          = "app"
-  contract_name     = "Permit-All"
+  contract_name     = "${var.student}-East-West-cntr"
   relationship_type = "provider"
 
 }
@@ -338,7 +336,7 @@ resource "mso_schema_template_anp_epg_contract" "contract1" {
   template_name     = "${var.student}-template"
   anp_name          = "anp"
   epg_name          = "web"
-  contract_name     = "Permit-All"
+  contract_name     = "${var.student}-East-West-cntr"
   relationship_type = "consumer"
 }
 #
