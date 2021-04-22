@@ -284,6 +284,62 @@ resource "mso_schema_site_anp_epg_domain" "epg_app-domain" {
   resolution_immediacy = "lazy"
 }
 #
+# filter
+#
+resource "mso_schema_template_filter_entry" "filter_entry" {
+        schema_id = mso_schema.student-lab3-schema-2.id
+        template_name = "${var.student}-template"
+        name = "Permit-All"
+        display_name="Permit-All"
+        entry_name = "Permit-All"
+        entry_display_name="Permit-All"
+        destination_from="unspecified"
+        destination_to="unspecified"
+        source_from="unspecified"
+        source_to="unspecified"
+        arp_flag="unspecified"
+}
+#
+# contract 
+#
+resource "mso_schema_template_contract" "template_contract" {
+  schema_id = mso_schema.student-lab3-schema-2.id
+  template_name = "${var.student}-template"
+  contract_name = "${var.student}-East-West-cntr"
+  display_name = "${var.student}-East-West-cntr"
+  filter_type = "bothWay"
+  scope = "context"
+  filter_relationships = {
+    filter_schema_id = mso_schema_template_filter_entry.filter_entry.id
+    filter_template_name = "${var.student}-template"
+    filter_name = "Permit-All"
+  }
+  directives = ["none"]
+}
+#
+# provider
+#
+resource "mso_schema_template_anp_epg_contract" "contract" {
+  schema_id = mso_schema.student-lab3-schema-2.id
+  template_name = "${var.student}-template"
+  anp_name = "anp"
+  epg_name = "app"
+  contract_name = "Permit-All"
+  relationship_type = "provider"
+
+}
+#
+# consumer
+#
+resource "mso_schema_template_anp_epg_contract" "contract1" {
+  schema_id =  mso_schema.student-lab3-schema-2.id
+  template_name = "${var.student}-template"
+  anp_name = "anp"
+  epg_name = "web"
+  contract_name = "Permit-All"
+  relationship_type = "consumer"
+}
+#
 # Deploy Schema 2
 #
 resource "mso_schema_template_deploy" "student-schema-2-deploy-site1" {
